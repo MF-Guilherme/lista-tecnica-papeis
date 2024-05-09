@@ -39,3 +39,38 @@ def cadastrar_acabamento(request):
         novo_acabamento.save()
         messages.add_message(request, constants.SUCCESS, 'Tipo de acabamento cadastrado com sucesso!')
         return redirect('/cadastro/cadastrar_acabamento')
+    
+
+def cadastrar_papel(request):
+    if request.method == 'GET':
+        return render(request, 'cadastro_papel.html')
+    elif request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        gramatura = int(request.POST.get('gramatura'))
+        bobina = int(request.POST.get('bobina'))
+        tipo = request.POST['tipo']
+
+        descricao = f'{tipo} {gramatura}x{bobina}mm'
+
+        cutoff = 0
+        if bobina < 500:
+            cutoff = 584
+        elif bobina <= 940:
+            cutoff = 578
+        else:
+            cutoff = 546
+
+        try:
+            papel = Papel(
+                codigo=codigo,
+                descricao=descricao,
+                gramatura=gramatura,
+                bobina=bobina,
+                cutoff=cutoff
+            )
+            papel.save()
+            messages.add_message(request, constants.SUCCESS, 'Papel cadastrado com sucesso!')
+            return redirect('/cadastro/cadastrar_papel')
+        except:
+            messages.add_message(request, constants.ERROR, 'Cadastro não realizado, por favor revise as informações')
+            return redirect('/cadastro/cadastrar_papel')

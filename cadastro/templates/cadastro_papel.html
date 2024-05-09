@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+{% endblock 'head' %}
+
+{% block 'body' %}
+    {% if messages %}
+        <br>
+        {% for message in messages %}
+            <section class="alert {{message.tags}}">
+                {{message}}
+            </section>
+        {% endfor %}
+    {% endif %}
+<div class="container">
+    <form class="form-validation" method="POST" action="{% url "cadastrar_papel" %}">{% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <label for="codigoInput" class="form-label mt-3">Código</label>
+                <input type="text" class="form-control" id="codigoInput" name="codigo">
+            </div>
+            <div class="col">
+                <label for="gramaturaInput" class="form-label mt-3">Gramatura</label>
+                <input type="text" class="form-control" id="gramaturaInput" name="gramatura">
+            </div>
+            <div class="col">
+                <label for="bobinaInput" class="form-label mt-3">Bobina</label>
+                <input type="text" class="form-control" id="bobinaInput" name="bobina">
+            </div>
+            <div class="col">
+                <label class="form-label mt-3">Tipo de papel</label>
+                <select class="form-select" aria-label="Default select example" name="tipo">
+                    <option selected>Selecione o tipo de papel</option>
+                    <option value="COUCHE">Couche</option>
+                    <option value="LWC">LWC</option>
+                  </select>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-2" type="submit" id="">Cadastrar</button>
+    </form>
+</div>
+
+{% endblock 'body' %}
