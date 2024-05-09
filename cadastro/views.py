@@ -46,7 +46,8 @@ def cadastrar_acabamento(request):
 
 def cadastrar_papel(request):
     if request.method == 'GET':
-        return render(request, 'cadastro_papel.html')
+        papeis = Papel.objects.all()
+        return render(request, 'cadastro_papel.html', {'papeis': papeis})
     elif request.method == 'POST':
         codigo = request.POST.get('codigo')
         gramatura = int(request.POST.get('gramatura'))
