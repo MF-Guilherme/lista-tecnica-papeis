@@ -78,3 +78,11 @@ def cadastrar_papel(request):
         except:
             messages.add_message(request, constants.ERROR, 'Cadastro não realizado, por favor revise as informações')
             return redirect('/cadastro/cadastrar_papel')
+        
+
+def cadastrar_lista_tecnica(request):
+    if request.method == 'GET':
+        ciclos = Ciclo.objects.all()
+        versoes = Versao.objects.all()
+        tipos_acbto = Acabamento.objects.all()
+        return render(request, 'cadastro_lista_tecnica.html', {'ciclos': ciclos, 'versoes': versoes, 'tipos_acbto': tipos_acbto})
