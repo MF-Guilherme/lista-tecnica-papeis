@@ -7,7 +7,8 @@ from django.contrib.messages import constants
 
 def cadastrar_ciclo(request):
     if request.method == 'GET':
-        return render(request, 'cadastro_ciclo.html')
+        ultimo_ciclo = Ciclo.objects.latest('id')
+        return render(request, 'cadastro_ciclo.html', {'ultimo_ciclo': ultimo_ciclo})
     elif request.method == 'POST':
         ciclo = request.POST.get('ciclo')
         

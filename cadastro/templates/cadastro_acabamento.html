@@ -17,15 +17,28 @@
         {% endfor %}
     {% endif %}
 <div class="container">
-    <h5 class="mt-3 mb-2">Cadastre o novo tipo de acabamento:</h5>
-    <form class="form-validation" method="POST" action="{% url "cadastrar_acabamento" %}">{% csrf_token %}
-        <div class="col-12 w-25">
-            <div class="input-group mt-1 mb-3">
-                <input value="" type="text" class="form-control" placeholder="Novo acabamento" name="tipo_acabamento" id="">
-                <button class="btn btn-primary" type="submit" id="">Cadastrar</button>
-            </div>
+    <div class="row justify-content-around">
+        <div class="col-4">
+            <h5 class="mt-3">Cadastre o novo tipo de acabamento:</h5>
+            <form class="form-validation" method="POST" action="{% url "cadastrar_acabamento" %}">{% csrf_token %}
+                    <div class="input-group mt-1 mb-3">
+                        <input value="" type="text" class="form-control" placeholder="Novo acabamento" name="tipo_acabamento" id="">
+                        <button class="btn btn-primary" type="submit" id="">Cadastrar</button>
+                    </div>
+            </form>
         </div>
-    </form>
+
+        <div class="col-4 mt-3 text-center">
+            <h5>Acabamentos cadastrados:</h5>
+            <ul class="list-group">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+              </ul>
+        </div>
+    </div>
 </div>
 
 {% endblock 'body' %}
