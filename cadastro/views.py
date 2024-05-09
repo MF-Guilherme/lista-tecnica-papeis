@@ -33,7 +33,8 @@ def cadastrar_versao(request):
 
 def cadastrar_acabamento(request):
     if request.method == 'GET':
-        return render(request, 'cadastro_acabamento.html')
+        tipos_acabamento = Acabamento.objects.all()
+        return render(request, 'cadastro_acabamento.html', {'tipos_acabamento': tipos_acabamento})
     elif request.method == 'POST':
         acabamento = request.POST.get('tipo_acabamento')
 
