@@ -28,3 +28,14 @@ def cadastrar_versao(request):
         messages.add_message(request, constants.SUCCESS, 'Versão cadastrada com sucesso!')
         return redirect('/cadastro/cadastrar_versao')
 
+
+def cadastrar_acabamento(request):
+    if request.method == 'GET':
+        return render(request, 'cadastro_acabamento.html')
+    elif request.method == 'POST':
+        acabamento = request.POST.get('tipo_acabamento')
+
+        novo_acabamento = Acabamento(tipo=acabamento)
+        novo_acabamento.save()
+        messages.add_message(request, constants.SUCCESS, 'Tipo de acabamento cadastrado com sucesso!')
+        return redirect('/cadastro/cadastrar_acabamento')
