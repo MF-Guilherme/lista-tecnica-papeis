@@ -31,11 +31,9 @@
         <div class="col-4 mt-3 text-center">
             <h5>Versões cadastradas:</h5>
             <ul class="list-group">
-                <li class="list-group-item">An item</li>
-                <li class="list-group-item">A second item</li>
-                <li class="list-group-item">A third item</li>
-                <li class="list-group-item">A fourth item</li>
-                <li class="list-group-item">And a fifth one</li>
+                {% for versao in versoes  %}
+                    <li class="list-group-item">{{versao}}</li>
+                {% endfor %}
               </ul>
         </div>
     </div>

@@ -20,7 +20,8 @@ def cadastrar_ciclo(request):
 
 def cadastrar_versao(request):
     if request.method == 'GET':
-        return render(request, 'cadastro_versao.html')
+        versoes = Versao.objects.all()
+        return render(request, 'cadastro_versao.html', {'versoes': versoes})
     elif request.method == 'POST':
         versao = request.POST.get('versao')
 
