@@ -8,6 +8,24 @@
 {% endblock 'head' %}
 
 {% block 'body' %}
-<h1> Cadastro de Ciclos </h1>
+    {% if messages %}
+        <br>
+        {% for message in messages %}
+            <section class="alert {{message.tags}}">
+                {{message}}
+            </section>
+        {% endfor %}
+    {% endif %}
+<div class="container">
+    <h5 class="mt-3 mb-0">Novo Ciclo:</h5>
+    <form class="form-validation" method="POST" action="">{% csrf_token %}
+        <div class="col-12 w-25">
+            <div class="input-group mt-1 mb-3">
+                <input value="" type="text" class="form-control" placeholder="Exemplo: '12/2023'" name="ciclo" id="">
+                <button class="btn btn-primary" type="submit" id="">Cadastrar</button>
+            </div>
+        </div>
+    </form>
+</div>
 
 {% endblock 'body' %}
