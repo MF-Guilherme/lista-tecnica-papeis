@@ -17,3 +17,14 @@ def cadastrar_ciclo(request):
         return redirect('/cadastro/cadastrar_ciclo')
 
 
+def cadastrar_versao(request):
+    if request.method == 'GET':
+        return render(request, 'cadastro_versao.html')
+    elif request.method == 'POST':
+        versao = request.POST.get('versao')
+
+        nova_versao = Versao(nome=versao)
+        nova_versao.save()
+        messages.add_message(request, constants.SUCCESS, 'Versão cadastrada com sucesso!')
+        return redirect('/cadastro/cadastrar_versao')
+
