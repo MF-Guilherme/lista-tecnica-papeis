@@ -3,6 +3,7 @@ from .models import Ciclo, Produto, Acabamento, Papel, Versao, Caderno
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.messages import constants
+from .utils import desperdicio_acerto_interno, desperdicio_imp_interno, desperdicio_acbto_interno
 
 
 def cadastrar_ciclo(request):
@@ -85,4 +86,25 @@ def cadastrar_lista_tecnica(request):
         ciclos = Ciclo.objects.all()
         versoes = Versao.objects.all()
         tipos_acbto = Acabamento.objects.all()
-        return render(request, 'cadastro_lista_tecnica.html', {'ciclos': ciclos, 'versoes': versoes, 'tipos_acbto': tipos_acbto})
+        papeis = Papel.objects.all()
+        return render(request, 'cadastro_lista_tecnica.html', {'ciclos': ciclos, 'versoes': versoes, 'tipos_acbto': tipos_acbto, 'papeis': papeis})
+    elif request.method == 'POST':
+        tiragem = 24000
+        nome_caderno = request.POST.get('nome_caderno')
+        paginacao = int(request.POST.get('paginacao'))
+        exs_giro = int(request.POST.get('exs_giro'))
+        papel = int(request.POST.get('papel'))
+        disc_imp = request.POST.get('disc_imp')
+        refile_imp = request.POST.get('refile_imp')
+        desintercalacao = request.POST.get('desintercalacao')
+        refile_acab = request.POST.get('refile_acab')
+        disc_acab = request.POST.get('disc_acab')
+        disc_man = request.POST.get('disc_man')
+        manuseio = request.POST.get('manuseio')
+    
+        desp_acbto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+        desp_imp_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+        print(f'Entrada = {desp_acbto_int}')
+        print(f'Impressão = {desp_imp_int}')
+        
+        return redirect('/cadastro/cadastrar_lista_tecnica')
