@@ -89,7 +89,8 @@ def cadastrar_lista_tecnica(request):
         papeis = Papel.objects.all()
         return render(request, 'cadastro_lista_tecnica.html', {'ciclos': ciclos, 'versoes': versoes, 'tipos_acbto': tipos_acbto, 'papeis': papeis})
     elif request.method == 'POST':
-        tiragem = 24000
+        tiragem = 100001
+        tipo_acbto = "Lombada Quadrada"
         nome_caderno = request.POST.get('nome_caderno')
         paginacao = int(request.POST.get('paginacao'))
         exs_giro = int(request.POST.get('exs_giro'))
@@ -100,11 +101,13 @@ def cadastrar_lista_tecnica(request):
         refile_acab = request.POST.get('refile_acab')
         disc_acab = request.POST.get('disc_acab')
         disc_man = request.POST.get('disc_man')
-        manuseio = request.POST.get('manuseio')
-    
-        desp_acbto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+            
+        desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
         desp_imp_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
-        print(f'Entrada = {desp_acbto_int}')
+        desp_acbto_int = desperdicio_acbto_interno(tiragem, tipo_acbto, refile_acab, disc_acab, disc_man)
+
+        print(f'Entrada = {desp_acerto_int}')
         print(f'Impressão = {desp_imp_int}')
+        print(f'Acabamento = {desp_acbto_int}')
         
         return redirect('/cadastro/cadastrar_lista_tecnica')

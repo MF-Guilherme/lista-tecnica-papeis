@@ -12,6 +12,15 @@ def desperdicio_refile(tiragem):
         return (300/tiragem) * 100
     else:
         return 0.5
+    
+
+def desperdicio_tipo_acabamento(tipo, tiragem):
+    if tiragem < 25000:
+        return ((900 / tiragem)* 100)
+    elif tipo == "Lombada Quadrada":
+        return 2.0
+    elif tipo == "Refile":
+        return 0.5
 
 
 def desperdicio_acerto_interno(tiragem, paginacao, exs_giro):
@@ -52,7 +61,21 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
     return total
 
 
-def desperdicio_acbto_interno(disc_acab, refile_acab):
-    pass
+def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
+    desp_acbto = desperdicio_tipo_acabamento(tipo_acbto, tiragem)
+    desp_refile = 0.0
+    desp_discovery = 0.0
+    desp_disc_man = 0.0
 
+    if refile:
+        desp_refile = desperdicio_refile(tiragem)
+    if discovery:
+        desp_discovery = desperdicio_discovery(tiragem)
+    if disc_man:
+        desp_disc_man = desperdicio_discovery(tiragem)
 
+    total = desp_acbto + desp_refile + desp_discovery + desp_disc_man
+
+    return total
+
+print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
