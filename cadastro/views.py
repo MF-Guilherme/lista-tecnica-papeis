@@ -101,7 +101,7 @@ def cadastrar_lista_tecnica(request):
         refile_acab = request.POST.get('refile_acab')
         disc_acab = request.POST.get('disc_acab')
         disc_man = request.POST.get('disc_man')
-            
+               
         desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
         desp_imp_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
         desp_acbto_int = desperdicio_acbto_interno(tiragem, tipo_acbto, refile_acab, disc_acab, disc_man)
