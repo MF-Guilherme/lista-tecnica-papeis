@@ -79,3 +79,19 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
     return total
 
 print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
+
+dic = {
+'nome_caderno_1': 'Capa', 
+'paginacao_1': '4', 
+'exs_giro_1': '1', 
+'papel_1': '1', 
+'disc_imp_1': '1', 
+'refile_imp_1': '1', 
+'desintercalacao_1': '1', 
+'refile_acab_1': '1', 
+'disc_acab_1': '1', 
+'disc_man_1': '1'
+}
+
+for valor in dic.values():
+    print(valor)

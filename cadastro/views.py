@@ -113,6 +113,13 @@ def cadastrar_lista_tecnica(request):
         formData = request.POST
         table_data = json.loads(formData['table_data'])
 
+        for row in table_data:
+            for key, value in row.items():
+                if value.lower() == '1':
+                    row[key] = True
+                else:
+                    row[key] = False
+
         # Agora você pode acessar os dados da tabela em 'table_data'
         print(table_data)
 

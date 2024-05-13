@@ -21,3 +21,9 @@
 .color-dark{
     color: var(--dark-color);
 }
+
+
+.visually-hidden {
+    display: none;
+}
+
