@@ -17,7 +17,7 @@
         {% endfor %}
     {% endif %}
 <div class="container">
-    <form class="form-validation" method="POST" action="">{% csrf_token %}
+    <form class="form-validation" method="POST" action="{% url "cadastrar_lista_tecnica" %}" id="form_lista_tecnica">{% csrf_token %}
         <div class="row justify-content-between">
             <div class="col-2">
                 <label class="form-label mt-3">Ciclo</label>
@@ -79,7 +79,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+            <!--<tr>
                 <td><input type="text" class="form-control" name="nome_caderno"></td>
                 <td><input type="number" class="form-control" name="paginacao"></td>
                 <td>
@@ -103,7 +103,7 @@
                 <td><input class="form-check-input" type="checkbox" value="1" id="" name="refile_acab"></td>
                 <td><input class="form-check-input" type="checkbox" value="1" id="" name="disc_acab"></td>
                 <td><input class="form-check-input" type="checkbox" value="1" id="" name="disc_man"></td>
-                </tr>
+                </tr> -->
             </tbody>
           </table>
         <button class="btn btn-primary mt-2" type="submit" id="">Cadastrar</button>
@@ -127,49 +127,69 @@
             $("#btn_gerar_cads").click(function() {
                 const total = parseInt($('#qtde_cadernos').val());
                 for (let i = 0; i < total; i++) {
+                    const index = $("tbody tr").length + 1;
                     $("tbody").append(
                         '<tr>' +
-                        '<td><input type="text" class="form-control" name="nome_caderno[]"></td>' +
-                        '<td><input type="number" class="form-control" name="paginacao[]"></td>' +
+                        '<td><input type="text" class="form-control" name="nome_caderno_' + index + '"></td>' +
+                        '<td><input type="number" class="form-control" name="paginacao_' + index + '"></td>' +
                         '<td>' +
-                        '<select class="form-select" name="exs_giro[]">' +
+                        '<select class="form-select" name="exs_giro_' + index + '">' +
                         '<option></option>' +
                         '<option value="1">1</option>' +
                         '<option value="2">2</option>' +
                         '</select>' +
                         '</td>' +
                         '<td>' +
-                        '<select class="form-select" name="papel[]">' +
+                        '<select class="form-select" name="papel_' + index + '">' +
                         '{% for papel in papeis %}' +
                         '<option></option>' +
                         '<option value="{{ papel.id }}">{{ papel }}</option>' +
                         '{% endfor %}' +
                         '</select>' +
                         '</td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="disc_imp[]"></td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="refile_imp[]"></td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="desintercalacao[]"></td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="refile_acab[]"></td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="disc_acab[]"></td>' +
-                        '<td><input class="form-check-input" type="checkbox" value="1" name="disc_man[]"></td>' +
+                        '<td><input type="hidden" name="disc_imp_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_imp_' + index + '"></td>' +
+                        '<td><input type="hidden" name="refile_imp_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="refile_imp_' + index + '"></td>' +
+                        '<td><input type="hidden" name="desintercalacao_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="desintercalacao_' + index + '"></td>' +
+                        '<td><input type="hidden" name="refile_acab_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="refile_acab_' + index + '"></td>' +
+                        '<td><input type="hidden" name="disc_acab_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_acab_' + index + '"></td>' +
+                        '<td><input type="hidden" name="disc_man_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_man_' + index + '"></td>' +
                         '</tr>'
                     );
                 }
             });
         
             // Processar o formulário
-            $("form").submit(function(event) {
+            $("#form_lista_tecnica").submit(function(event) {
                 event.preventDefault();
-        
+                
                 // Obter os valores dos campos
                 var formData = $(this).serialize();
-        
-                // Enviar dados para onde quiser
-                console.log(formData);
-                // Exemplo de envio para um servidor
-                // $.post("url_para_enviar_os_dados", formData, function(response) {
-                //    console.log(response);
-                // });
+    
+                // Obter os dados da tabela
+                var tableData = [];
+                $('table tbody tr').each(function(index, row) {
+                    var rowData = {};
+                    $(row).find('input, select').each(function(index, column) {
+                        rowData[$(column).attr('name')] = $(column).val();
+                    });
+                    tableData.push(rowData);
+                });
+    
+                // Adicionar os dados da tabela ao formData
+                formData += '&table_data=' + JSON.stringify(tableData);
+    
+                // Envio para o servidor
+                $.post("/cadastro/cadastrar_lista_tecnica/", formData, function(response) {
+                    
+                    if (response.success) {
+                        // Redirecionar para a página desejada
+                        // window.location.href = response.redirect_url;
+                        alert('Cadastro realizado com sucesso!');
+                    } else {
+                        // Caso ocorra algum erro, você pode tratar aqui
+                        alert('Ocorreu um erro ao processar o formulário.');
+                    }
+                });
             });
         });
         
