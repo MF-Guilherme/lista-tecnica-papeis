@@ -152,20 +152,25 @@
                 event.preventDefault();
                 
                 // Obter os valores dos campos
-                var formData = $(this).serialize();
+                var formData = $(this).serializeArray();
     
                 // Obter os dados da tabela
                 var tableData = [];
                 $('table tbody tr').each(function(index, row) {
                     var rowData = {};
                     $(row).find('input, select').each(function(index, column) {
-                        rowData[$(column).attr('name')] = $(column).val();
+                        if ($(column).is(':checkbox')) {
+                            // Se o checkbox estiver marcado, enviar '1', caso contrário, enviar '0'
+                            rowData[$(column).attr('name')] = $(column).is(':checked') ? '1' : '0';
+                        } else {
+                            rowData[$(column).attr('name')] = $(column).val();
+                        }
                     });
                     tableData.push(rowData);
                 });
     
                 // Adicionar os dados da tabela ao formData
-                formData += '&table_data=' + JSON.stringify(tableData);
+                formData.push({name: 'table_data', value: JSON.stringify(tableData)});
     
                 // Envio para o servidor
                 $.post("/cadastro/cadastrar_lista_tecnica/", formData, function(response) {

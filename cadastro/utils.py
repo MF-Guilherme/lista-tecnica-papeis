@@ -78,20 +78,45 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
 
     return total
 
-print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
 
-dic = {
-'nome_caderno_1': 'Capa', 
-'paginacao_1': '4', 
-'exs_giro_1': '1', 
-'papel_1': '1', 
-'disc_imp_1': '1', 
-'refile_imp_1': '1', 
-'desintercalacao_1': '1', 
-'refile_acab_1': '1', 
-'disc_acab_1': '1', 
-'disc_man_1': '1'
-}
 
-for valor in dic.values():
-    print(valor)
+if __name__ == "__main__":
+
+    #print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
+
+    
+    lista = [
+        {'nome_caderno_1': '01 cad', 'paginacao_1': '32', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'}, 
+        {'nome_caderno_2': '02 cad', 'paginacao_2': '28', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
+        ]
+    
+
+
+    for i, dic in enumerate(lista):
+        nome_cad = dic.get(f'nome_caderno_{str(i+1)}')
+        paginacao = dic.get(f'paginacao_{str(i+1)}')
+        exs_giro = dic.get(f'exs_giro_{str(i+1)}')
+        papel = dic.get(f'papel_{str(i+1)}')
+        disc_imp = dic.get(f'disc_imp_{str(i+1)}')
+        refile_imp = dic.get(f'refile_imp_{str(i+1)}')
+        desintercalacao = dic.get(f'desintercalacao_{str(i+1)}')
+        refile_acabamento = dic.get(f'refile_acab_{str(i+1)}')
+        disc_acabamento = dic.get(f'disc_acab_{str(i+1)}')
+        disc_manual = dic.get(f'disc_man_{str(i+1)}')
+        print(nome_cad)
+        print(paginacao)
+        print(exs_giro)
+        print(papel)
+        print(disc_imp)
+        print(refile_imp)
+        print(desintercalacao)
+        print(refile_acabamento)
+        print(disc_acabamento)
+        print(disc_manual)
+        print('-'*20)
+
+        
+            
+                            
+
+
