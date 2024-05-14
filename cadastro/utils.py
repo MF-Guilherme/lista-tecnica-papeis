@@ -1,3 +1,5 @@
+from .models import Produto, Acabamento, Caderno
+
 def desperdicio_discovery(tiragem):
     if tiragem <= 50000:
         return 2.0
@@ -42,13 +44,13 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
     desp_desintercalacao = 0.0
     desp_caderno = 0.0
 
-    if disc_imp:
+    if disc_imp == '1':
         desp_discovery = desperdicio_discovery(tiragem)
     
-    if refile_imp:
+    if refile_imp == '1':
         desp_refile = desperdicio_refile(tiragem)
 
-    if desintercalacao:
+    if desintercalacao == '1':
         desp_desintercalacao = 0.2
     
     if paginacao < 24:
@@ -67,16 +69,38 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
     desp_discovery = 0.0
     desp_disc_man = 0.0
 
-    if refile:
+    if refile == '1':
         desp_refile = desperdicio_refile(tiragem)
-    if discovery:
+    if discovery == '1':
         desp_discovery = desperdicio_discovery(tiragem)
-    if disc_man:
+    if disc_man == '1':
         desp_disc_man = desperdicio_discovery(tiragem)
 
     total = desp_acbto + desp_refile + desp_discovery + desp_disc_man
 
     return total
+
+
+def valores_por_caderno(lista_de_cadernos):
+    lista_valores = []
+    for dic in lista_de_cadernos:
+        lista_valores.append(list(dic.values()))
+    return lista_valores
+
+
+def salvar_caderno(lista, produto=Produto()):
+    nome = lista[0]
+    paginacao = int(lista[1])
+    exs_giro = int(lista[2])
+    papel = lista[3]
+    disc_imp = lista[4]
+    refile_imp = lista[5]
+    desintercalacao = lista[6]
+    refile_acab = lista[7]
+    disc_acab = lista[8]
+    disc_manual = lista[9]
+
+    caderno = Caderno(nome=nome, paginacao=paginacao,)
 
 
 
@@ -90,30 +114,11 @@ if __name__ == "__main__":
         {'nome_caderno_2': '02 cad', 'paginacao_2': '28', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
         ]
     
+    lista_valores = []
+    for dic in lista:
+        lista_valores.append(list(dic.values()))
+    print(lista_valores)
 
-
-    for i, dic in enumerate(lista):
-        nome_cad = dic.get(f'nome_caderno_{str(i+1)}')
-        paginacao = dic.get(f'paginacao_{str(i+1)}')
-        exs_giro = dic.get(f'exs_giro_{str(i+1)}')
-        papel = dic.get(f'papel_{str(i+1)}')
-        disc_imp = dic.get(f'disc_imp_{str(i+1)}')
-        refile_imp = dic.get(f'refile_imp_{str(i+1)}')
-        desintercalacao = dic.get(f'desintercalacao_{str(i+1)}')
-        refile_acabamento = dic.get(f'refile_acab_{str(i+1)}')
-        disc_acabamento = dic.get(f'disc_acab_{str(i+1)}')
-        disc_manual = dic.get(f'disc_man_{str(i+1)}')
-        print(nome_cad)
-        print(paginacao)
-        print(exs_giro)
-        print(papel)
-        print(disc_imp)
-        print(refile_imp)
-        print(desintercalacao)
-        print(refile_acabamento)
-        print(disc_acabamento)
-        print(disc_manual)
-        print('-'*20)
 
         
             

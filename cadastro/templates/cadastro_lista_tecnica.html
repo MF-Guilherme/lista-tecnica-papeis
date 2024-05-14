@@ -151,6 +151,9 @@
             $("#form_lista_tecnica").submit(function(event) {
                 event.preventDefault();
                 
+                // habilitando campos antes de enviar o formulário
+                $('#qtde_cadernos, #id_ciclo').prop('disabled', false);
+                
                 // Obter os valores dos campos
                 var formData = $(this).serializeArray();
     
