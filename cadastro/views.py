@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Ciclo, Produto, Acabamento, Papel, Versao, Caderno
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.messages import constants
-from .utils import desperdicio_acerto_interno, desperdicio_imp_interno, desperdicio_acbto_interno
+from .utils import *
+import json
 
 
 def cadastrar_ciclo(request):
@@ -89,25 +90,42 @@ def cadastrar_lista_tecnica(request):
         papeis = Papel.objects.all()
         return render(request, 'cadastro_lista_tecnica.html', {'ciclos': ciclos, 'versoes': versoes, 'tipos_acbto': tipos_acbto, 'papeis': papeis})
     elif request.method == 'POST':
-        tiragem = 100001
-        tipo_acbto = "Lombada Quadrada"
-        nome_caderno = request.POST.get('nome_caderno')
-        paginacao = int(request.POST.get('paginacao'))
-        exs_giro = int(request.POST.get('exs_giro'))
-        papel = int(request.POST.get('papel'))
-        disc_imp = request.POST.get('disc_imp')
-        refile_imp = request.POST.get('refile_imp')
-        desintercalacao = request.POST.get('desintercalacao')
-        refile_acab = request.POST.get('refile_acab')
-        disc_acab = request.POST.get('disc_acab')
-        disc_man = request.POST.get('disc_man')
-            
-        desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
-        desp_imp_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
-        desp_acbto_int = desperdicio_acbto_interno(tiragem, tipo_acbto, refile_acab, disc_acab, disc_man)
-
-        print(f'Entrada = {desp_acerto_int}')
-        print(f'Impressão = {desp_imp_int}')
-        print(f'Acabamento = {desp_acbto_int}')
+        formData = request.POST
+        table_data = json.loads(formData['table_data'])
+        # print(table_data)
+        valores_cadernos = valores_por_caderno(table_data)
         
-        return redirect('/cadastro/cadastrar_lista_tecnica')
+        nome_produto = request.POST.get('tipo_material')
+        tiragem_str = request.POST.get('tiragem')
+        tiragem = int(tiragem_str.replace('.', ''))
+        id_tipo_acabamento = int(request.POST.get('tipo_acabamento'))
+        versao = int(request.POST.get('versao'))
+        ciclo = int(request.POST.get('ciclo'))
+        # id_tipo_acbto = request.POST.get('id_acabamento')
+        # nome_caderno = request.POST.get('nome_caderno')
+        # paginacao = int(request.POST.get('paginacao'))
+        # exs_giro = int(request.POST.get('exs_giro'))
+        # papel = int(request.POST.get('papel'))
+        # disc_imp = request.POST.get('disc_imp')
+        # refile_imp = request.POST.get('refile_imp')
+        # desintercalacao = request.POST.get('desintercalacao')
+        # refile_acab = request.POST.get('refile_acab')
+        # disc_acab = request.POST.get('disc_acab')
+        # disc_man = request.POST.get('disc_man')
+               
+        # desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+        # desp_imp_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+        # desp_acbto_int = desperdicio_acbto_interno(tiragem, tipo_acbto, refile_acab, disc_acab, disc_man)
+        id_acabamento = Acabamento.objects.get(id=id_tipo_acabamento)
+        id_versao = Versao.objects.get(id=versao)
+        id_ciclo = Ciclo.objects.get(id=ciclo)
+
+        try:
+            produto = Produto(nome=nome_produto, tiragem=tiragem, id_acabamento=id_acabamento, id_versao=id_versao, id_ciclo=id_ciclo)
+            produto.save()  
+            print('Produto cadastrado')
+        except Exception as e:
+            print(str(e))
+        redirect_url = '/cadastro/cadastrar_lista_tecnica/'
+        # Retorna uma resposta JSON indicando que a operação foi bem-sucedida
+        return JsonResponse({'success': True, 'redirect_url': redirect_url})

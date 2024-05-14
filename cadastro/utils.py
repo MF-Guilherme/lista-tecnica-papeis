@@ -1,3 +1,5 @@
+from .models import Produto, Acabamento, Caderno
+
 def desperdicio_discovery(tiragem):
     if tiragem <= 50000:
         return 2.0
@@ -42,13 +44,13 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
     desp_desintercalacao = 0.0
     desp_caderno = 0.0
 
-    if disc_imp:
+    if disc_imp == '1':
         desp_discovery = desperdicio_discovery(tiragem)
     
-    if refile_imp:
+    if refile_imp == '1':
         desp_refile = desperdicio_refile(tiragem)
 
-    if desintercalacao:
+    if desintercalacao == '1':
         desp_desintercalacao = 0.2
     
     if paginacao < 24:
@@ -67,15 +69,59 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
     desp_discovery = 0.0
     desp_disc_man = 0.0
 
-    if refile:
+    if refile == '1':
         desp_refile = desperdicio_refile(tiragem)
-    if discovery:
+    if discovery == '1':
         desp_discovery = desperdicio_discovery(tiragem)
-    if disc_man:
+    if disc_man == '1':
         desp_disc_man = desperdicio_discovery(tiragem)
 
     total = desp_acbto + desp_refile + desp_discovery + desp_disc_man
 
     return total
 
-print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
+
+def valores_por_caderno(lista_de_cadernos):
+    lista_valores = []
+    for dic in lista_de_cadernos:
+        lista_valores.append(list(dic.values()))
+    return lista_valores
+
+
+def salvar_caderno(lista, produto=Produto()):
+    nome = lista[0]
+    paginacao = int(lista[1])
+    exs_giro = int(lista[2])
+    papel = lista[3]
+    disc_imp = lista[4]
+    refile_imp = lista[5]
+    desintercalacao = lista[6]
+    refile_acab = lista[7]
+    disc_acab = lista[8]
+    disc_manual = lista[9]
+
+    caderno = Caderno(nome=nome, paginacao=paginacao,)
+
+
+
+if __name__ == "__main__":
+
+    #print(desperdicio_acbto_interno(100001, 'Lombada Quadrada', 1, None, None))
+
+    
+    lista = [
+        {'nome_caderno_1': '01 cad', 'paginacao_1': '32', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'}, 
+        {'nome_caderno_2': '02 cad', 'paginacao_2': '28', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
+        ]
+    
+    lista_valores = []
+    for dic in lista:
+        lista_valores.append(list(dic.values()))
+    print(lista_valores)
+
+
+        
+            
+                            
+
+

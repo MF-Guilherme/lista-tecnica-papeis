@@ -17,11 +17,11 @@
         {% endfor %}
     {% endif %}
 <div class="container">
-    <form class="form-validation" method="POST" action="">{% csrf_token %}
-        <div class="row justify-content-between">
+    <form class="form-validation" method="POST" action="{% url "cadastrar_lista_tecnica" %}" id="form_lista_tecnica">{% csrf_token %}
+        <div class="row justify-content-between fw-bold text-center">
             <div class="col-2">
-                <label class="form-label mt-3">Ciclo</label>
-                <select class="form-select" aria-label="Default select example" name="ciclo">
+                <label for="id_ciclo" class="form-label mt-3">Ciclo</label>
+                <select class="form-select" aria-label="Default select example" name="ciclo" id="id_ciclo">
                     <option selected>Selecione...</option>
                     {% for ciclo in ciclos %}
                        <option value="{{ciclo.id}}">{{ciclo}}</option>
@@ -29,8 +29,8 @@
                 </select>
             </div>
             <div class="col-2">
-                <label class="form-label mt-3">Versão</label>
-                <select class="form-select" aria-label="Default select example" name="versao">
+                <label for="id_versao"class="form-label mt-3">Versão</label>
+                <select class="form-select" aria-label="Default select example" name="versao" id="id_versao">
                     <option selected>Selecione...</option>
                     {% for versao in versoes %}
                        <option value="{{versao.id}}">{{versao}}</option>
@@ -38,8 +38,8 @@
                 </select>
             </div>
             <div class="col-2">
-                <label class="form-label mt-3">Tipo de Acabamento</label>
-                <select class="form-select" aria-label="Default select example" name="tipo_acabamento">
+                <label for="id_acabamento" class="form-label mt-3">Tipo de Acabamento</label>
+                <select class="form-select" aria-label="Default select example" name="tipo_acabamento" id="id_acabamento">
                     <option selected>Selecione...</option>
                     {% for acabamento in tipos_acbto %}
                        <option value="{{acabamento.id}}">{{acabamento}}</option>
@@ -47,23 +47,23 @@
                 </select>
             </div>        
             <div class="col-2">
-                <label for="codigoInput" class="form-label mt-3">Tipo de Material</label>
-                <input type="text" class="form-control" id="" name="tipo_material" placeholder="Ex.: Revista">
+                <label for="id_tipo_material" class="form-label mt-3">Tipo de Material</label>
+                <input type="text" class="form-control text-center" id="id_tipo_material" name="tipo_material" placeholder="Ex.: Revista">
             </div>
             <div class="col-2">
-                <label for="gramaturaInput" class="form-label mt-3">Tiragem</label>
-                <input type="number" class="form-control" id="" name="tiragem">
+                <label for="id_tiragem" class="form-label mt-3">Tiragem</label>
+                <input type="text" class="form-control text-center" id="id_tiragem" name="tiragem">
             </div>
             <div class="col-2">
-                <label for="bobinaInput" class="form-label mt-3">Qtde. Cadernos</label>
+                <label for="qtde_cadernos" class="form-label mt-3">Qtde. Cadernos</label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="qtde_cadernos" id="qtde_cadernos">
-                    <button class="btn btn-outline-secondary text-bg-success" type="button" id="btn_gerar_cads">Gerar</button>
+                    <input type="text" class="form-control text-center" name="qtde_cadernos" id="qtde_cadernos">
+                    <button class="btn btn-outline-secondary text-bg-primary" type="button" id="btn_gerar_cads">Gerar</button>
                 </div>
             </div>            
         </div>
-
-        <table class="table text-center">
+    
+        <table class="table text-center visually-hidden">
             <thead>
               <tr>
                 <th scope="col">Nome do caderno</th>
@@ -79,35 +79,118 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><input type="text" class="form-control" name="nome_caderno"></td>
-                <td><input type="number" class="form-control" name="paginacao"></td>
-                <td>
-                    <select class="form-select" name="exs_giro">
-                        <option></option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="form-select" name="papel">
-                        {% for papel in papeis %}
-                            <option></option>
-                            <option value="{{papel.id}}">{{papel}}</option>
-                        {% endfor %}
-                    </select>
-                </td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="disc_imp"></td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="refile_imp"></td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="desintercalacao"></td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="refile_acab"></td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="disc_acab"></td>
-                <td><input class="form-check-input" type="checkbox" value="1" id="" name="disc_man"></td>
-                </tr>
+            
             </tbody>
           </table>
-        <button class="btn btn-primary mt-2" type="submit" id="">Cadastrar</button>
+        <div>
+            <a href="{% url "cadastrar_lista_tecnica" %}" class="btn btn-danger mt-2 visually-hidden" type="button" id="btn_cadastrar">Cancelar</a>
+            <button class="btn btn-primary mt-2 visually-hidden" type="submit" id="btn_cadastrar">Cadastrar</button>
+        </div>
     </form>    
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#id_tiragem').inputmask({
+            alias: 'numeric',
+            groupSeparator: '.',
+            autoGroup: true,
+            digits: 0,
+            radixPoint: ''
+        });
+
+        $( "form" ).on( "submit", function( event ) {
+            event.preventDefault();
+            var formData = {};
+            $(this).serializeArray().forEach(function(item) {
+                formData[item.name] = item.value;
+            });
+            console.log(formData);
+        });
+        $(document).ready(function() {
+            // Adicionar campo
+            $("#btn_gerar_cads").click(function() {
+                const total = parseInt($('#qtde_cadernos').val());
+                for (let i = 0; i < total; i++) {
+                    const index = $("tbody tr").length + 1;
+                    $("tbody").append(
+                        '<tr>' +
+                        '<td><input type="text" class="form-control" name="nome_caderno_' + index + '"></td>' +
+                        '<td><input type="number" class="form-control" name="paginacao_' + index + '"></td>' +
+                        '<td>' +
+                        '<select class="form-select" name="exs_giro_' + index + '">' +
+                        '<option></option>' +
+                        '<option value="1">1</option>' +
+                        '<option value="2">2</option>' +
+                        '</select>' +
+                        '</td>' +
+                        '<td>' +
+                        '<select class="form-select" name="papel_' + index + '">' +
+                        '{% for papel in papeis %}' +
+                        '<option></option>' +
+                        '<option value="{{ papel.id }}">{{ papel }}</option>' +
+                        '{% endfor %}' +
+                        '</select>' +
+                        '</td>' +
+                        '<td><input type="hidden" name="disc_imp_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_imp_' + index + '"></td>' +
+                        '<td><input type="hidden" name="refile_imp_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="refile_imp_' + index + '"></td>' +
+                        '<td><input type="hidden" name="desintercalacao_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="desintercalacao_' + index + '"></td>' +
+                        '<td><input type="hidden" name="refile_acab_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="refile_acab_' + index + '"></td>' +
+                        '<td><input type="hidden" name="disc_acab_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_acab_' + index + '"></td>' +
+                        '<td><input type="hidden" name="disc_man_' + index + '" value="0"><input class="form-check-input" type="checkbox" value="1" name="disc_man_' + index + '"></td>' +
+                        '</tr>'
+                    );
+                }
+                $('table, #btn_cadastrar').removeClass('visually-hidden');
+                $('#qtde_cadernos, #id_ciclo').prop('disabled', true);
+            });
+        
+            // Processar o formulário
+            $("#form_lista_tecnica").submit(function(event) {
+                event.preventDefault();
+                
+                // habilitando campos antes de enviar o formulário
+                $('#qtde_cadernos, #id_ciclo').prop('disabled', false);
+                
+                // Obter os valores dos campos
+                var formData = $(this).serializeArray();
+    
+                // Obter os dados da tabela
+                var tableData = [];
+                $('table tbody tr').each(function(index, row) {
+                    var rowData = {};
+                    $(row).find('input, select').each(function(index, column) {
+                        if ($(column).is(':checkbox')) {
+                            // Se o checkbox estiver marcado, enviar '1', caso contrário, enviar '0'
+                            rowData[$(column).attr('name')] = $(column).is(':checked') ? '1' : '0';
+                        } else {
+                            rowData[$(column).attr('name')] = $(column).val();
+                        }
+                    });
+                    tableData.push(rowData);
+                });
+    
+                // Adicionar os dados da tabela ao formData
+                formData.push({name: 'table_data', value: JSON.stringify(tableData)});
+    
+                // Envio para o servidor
+                $.post("/cadastro/cadastrar_lista_tecnica/", formData, function(response) {
+                    
+                    if (response.success) {
+                        // Redirecionar para a página desejada
+                        // window.location.href = response.redirect_url;
+                        alert('Cadastro realizado com sucesso!');
+                    } else {
+                        // Caso ocorra algum erro, você pode tratar aqui
+                        alert('Ocorreu um erro ao processar o formulário.');
+                    }
+                });
+            });
+        });
+        
+       });
+</script>
 
 {% endblock 'body' %}
