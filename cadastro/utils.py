@@ -1,5 +1,3 @@
-from .models import Produto, Acabamento, Caderno
-
 def desperdicio_discovery(tiragem):
     if tiragem <= 50000:
         return 2.0
@@ -88,19 +86,32 @@ def valores_por_caderno(lista_de_cadernos):
     return lista_valores
 
 
-def salvar_caderno(lista, produto=Produto()):
-    nome = lista[0]
-    paginacao = int(lista[1])
-    exs_giro = int(lista[2])
-    papel = lista[3]
-    disc_imp = lista[4]
-    refile_imp = lista[5]
-    desintercalacao = lista[6]
-    refile_acab = lista[7]
-    disc_acab = lista[8]
-    disc_manual = lista[9]
+def salvar_caderno(lista_de_valores, tiragem, tipo_acabamento):
+    try:
+        for i, cad in enumerate(lista_de_valores):
+            nome = cad[0]
+            paginacao = int(cad[1])
+            exs_giro = int(cad[2])
+            papel = cad[3]
+            disc_imp = cad[4]
+            refile_imp = cad[5]
+            desintercalacao = cad[6]
+            refile_acab = cad[7]
+            disc_acab = cad[8]
+            disc_manual = cad[9]
 
-    caderno = Caderno(nome=nome, paginacao=paginacao,)
+            desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+            desp_impressao_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+            desp_acabamento_int = desperdicio_acbto_interno(tiragem, tipo_acabamento, refile_acab, disc_acab, disc_manual)
+
+            print(f'Caderno {i+1}')
+            print(nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual)
+            print(f'Acerto: {desp_acerto_int}\n'
+                f'Impressão: {desp_impressao_int}\n'
+                f'Acabamento: {desp_acabamento_int}')
+            # caderno = Caderno(nome=nome, paginacao=paginacao,)
+    except Exception as e:
+        print(str(e))
 
 
 
@@ -114,10 +125,10 @@ if __name__ == "__main__":
         {'nome_caderno_2': '02 cad', 'paginacao_2': '28', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
         ]
     
-    lista_valores = []
-    for dic in lista:
-        lista_valores.append(list(dic.values()))
-    print(lista_valores)
+    lista_valores = valores_por_caderno(lista)
+    valores_caderno = salvar_caderno(lista_valores, 460810, 'Lombada Quadrada')
+
+    # print(valores_caderno)
 
 
         
