@@ -101,7 +101,6 @@ def cadastrar_lista_tecnica(request):
         id_tipo_acabamento = int(request.POST.get('tipo_acabamento'))
         versao = int(request.POST.get('versao'))
         ciclo = int(request.POST.get('ciclo'))
-        # id_tipo_acbto = request.POST.get('id_acabamento')
         # nome_caderno = request.POST.get('nome_caderno')
         # paginacao = int(request.POST.get('paginacao'))
         # exs_giro = int(request.POST.get('exs_giro'))
@@ -125,6 +124,7 @@ def cadastrar_lista_tecnica(request):
             produto.save()  
             print('Produto cadastrado')
         except Exception as e:
+            messages.add_message(request, constants.ERROR, e)
             print(str(e))
         redirect_url = '/cadastro/cadastrar_lista_tecnica/'
         # Retorna uma resposta JSON indicando que a operação foi bem-sucedida
