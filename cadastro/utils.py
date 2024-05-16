@@ -34,6 +34,13 @@ def desperdicio_acerto_interno(tiragem, paginacao, exs_giro):
             return 1000
         else:
             return 2000
+        
+
+def desperdicio_acerto_cliente(tiragem, paginacao, exs_giro):
+    if tiragem < 25000:
+        return desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+    else:
+        return 2000
 
 
 def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem):
@@ -81,14 +88,14 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
 
 def valores_por_caderno(lista_de_cadernos):
     lista_valores = []
-    for dic in lista_de_cadernos:
-        lista_valores.append(list(dic.values()))
+    for caderno in lista_de_cadernos:
+        lista_valores.append(list(caderno.values()))
     return lista_valores
 
 
 def salvar_caderno(lista_de_valores, tiragem, tipo_acabamento):
     try:
-        for i, cad in enumerate(lista_de_valores):
+        for cad in lista_de_valores:
             nome = cad[0]
             paginacao = int(cad[1])
             exs_giro = int(cad[2])
@@ -103,12 +110,13 @@ def salvar_caderno(lista_de_valores, tiragem, tipo_acabamento):
             desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
             desp_impressao_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
             desp_acabamento_int = desperdicio_acbto_interno(tiragem, tipo_acabamento, refile_acab, disc_acab, disc_manual)
-
-            print(f'Caderno {i+1}')
-            print(nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual)
-            print(f'Acerto: {desp_acerto_int}\n'
-                f'Impressão: {desp_impressao_int}\n'
-                f'Acabamento: {desp_acabamento_int}')
+            
+            return nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual, desp_acerto_int, desp_impressao_int, desp_acabamento_int
+            # print(f'Caderno {i+1}')
+            # print(nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual)
+            # print(f'Acerto: {desp_acerto_int}\n'
+            #     f'Impressão: {desp_impressao_int}\n'
+            #     f'Acabamento: {desp_acabamento_int}')
             # caderno = Caderno(nome=nome, paginacao=paginacao,)
     except Exception as e:
         print(str(e))
