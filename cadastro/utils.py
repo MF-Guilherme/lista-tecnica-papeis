@@ -68,6 +68,13 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
     return total
 
 
+def desperdicio_imp_cliente(disc_imp, refile_imp, desintercalacao, paginacao, tiragem):
+    if tiragem < 25000:
+        return desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+    else:
+        return 4.0
+
+
 def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
     desp_acbto = desperdicio_tipo_acabamento(tipo_acbto, tiragem)
     desp_refile = 0.0
@@ -84,6 +91,12 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
     total = desp_acbto + desp_refile + desp_discovery + desp_disc_man
 
     return total
+
+def desperdicio_acbto_cliente(tiragem, tipo_acbto, refile, discovery, disc_man):
+    if tiragem < 25000:
+        return desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man)
+    else:
+        4.0
 
 
 def valores_por_caderno(lista_de_cadernos):
