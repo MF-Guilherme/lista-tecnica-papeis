@@ -7,12 +7,17 @@ def desperdicio_discovery(tiragem):
         return 0.5
     
 
-def desperdicio_refile(tiragem):    
-    if tiragem < 25000:
-        return (300/tiragem) * 100
+def desperdicio_refile(tiragem, calc_cliente):
+    if calc_cliente == False:
+        if tiragem < 25000:
+            return (300/tiragem) * 100
+        else:
+            return 0.5
     else:
-        return 0.5
-    
+        if tiragem < 25000:
+            return (300/tiragem) * 100
+        else:
+            return 2.0
 
 def desperdicio_tipo_acabamento(tipo, tiragem):
     if tiragem < 25000:
@@ -25,15 +30,22 @@ def desperdicio_tipo_acabamento(tipo, tiragem):
 
 def desperdicio_acerto_interno(tiragem, paginacao, exs_giro):
     if tiragem < 25000:
-        if paginacao == 8:
+        if paginacao == '8':
             return 27000-tiragem
         else:
             return int((27000-tiragem) / exs_giro)
     else:
-        if paginacao == 16 and exs_giro == 2:
+        if paginacao == '16' and exs_giro == '2':
             return 1000
         else:
             return 2000
+        
+
+def desperdicio_acerto_cliente(tiragem, paginacao, exs_giro):
+    if tiragem < 25000:
+        return desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
+    else:
+        return 2000
 
 
 def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem):
@@ -46,7 +58,7 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
         desp_discovery = desperdicio_discovery(tiragem)
     
     if refile_imp == '1':
-        desp_refile = desperdicio_refile(tiragem)
+        desp_refile = desperdicio_refile(tiragem, False)
 
     if desintercalacao == '1':
         desp_desintercalacao = 0.2
@@ -61,14 +73,21 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
     return total
 
 
-def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
+def desperdicio_imp_cliente(disc_imp, refile_imp, desintercalacao, paginacao, tiragem):
+    if tiragem < 25000:
+        return desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+    else:
+        return 4.0
+
+
+def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, calc_cliente=False):
     desp_acbto = desperdicio_tipo_acabamento(tipo_acbto, tiragem)
     desp_refile = 0.0
     desp_discovery = 0.0
     desp_disc_man = 0.0
 
     if refile == '1':
-        desp_refile = desperdicio_refile(tiragem)
+        desp_refile = desperdicio_refile(tiragem, calc_cliente)
     if discovery == '1':
         desp_discovery = desperdicio_discovery(tiragem)
     if disc_man == '1':
@@ -78,11 +97,19 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man):
 
     return total
 
+def desperdicio_acbto_cliente(tiragem, tipo_acbto, refile, discovery, disc_man):
+    if tiragem < 25000:
+        return desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, calc_cliente=True)
+    elif disc_man == "1":
+        return 6.0
+    else:
+        return 4.0
+
 
 def valores_por_caderno(lista_de_cadernos):
     lista_valores = []
-    for dic in lista_de_cadernos:
-        lista_valores.append(list(dic.values()))
+    for caderno in lista_de_cadernos:
+        lista_valores.append(list(caderno.values()))
     return lista_valores
 
 
@@ -103,13 +130,23 @@ def salvar_caderno(lista_de_valores, tiragem, tipo_acabamento):
             desp_acerto_int = desperdicio_acerto_interno(tiragem, paginacao, exs_giro)
             desp_impressao_int = desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
             desp_acabamento_int = desperdicio_acbto_interno(tiragem, tipo_acabamento, refile_acab, disc_acab, disc_manual)
+            
+            desp_acerto_cli = desperdicio_acerto_cliente(tiragem, paginacao, exs_giro)
+            desp_impressao_cli = desperdicio_imp_cliente(disc_imp, refile_imp, desintercalacao, paginacao, tiragem)
+            desp_acabamento_cli = desperdicio_acbto_cliente(tiragem, tipo_acabamento, refile_acab, disc_acab, disc_manual)
+
+            # return nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual, desp_acerto_int, desp_impressao_int, desp_acabamento_int, desp_acerto_cli, desp_impressao_cli, desp_acabamento_cli
 
             print(f'Caderno {i+1}')
             print(nome, paginacao, exs_giro, papel, disc_imp, refile_imp, desintercalacao, refile_acab, disc_acab, disc_manual)
             print(f'Acerto: {desp_acerto_int}\n'
                 f'Impressão: {desp_impressao_int}\n'
-                f'Acabamento: {desp_acabamento_int}')
-            # caderno = Caderno(nome=nome, paginacao=paginacao,)
+                f'Acabamento: {desp_acabamento_int}\n'
+                f'Acerto_cli: {desp_acerto_cli}\n'
+                f'Impressão_cli: {desp_impressao_cli}\n'
+                f'Acabamento_cli: {desp_acabamento_cli}')
+            
+            
     except Exception as e:
         print(str(e))
 
@@ -121,12 +158,12 @@ if __name__ == "__main__":
 
     
     lista = [
-        {'nome_caderno_1': '01 cad', 'paginacao_1': '32', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'}, 
-        {'nome_caderno_2': '02 cad', 'paginacao_2': '28', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
+        {'nome_caderno_1': '01 cad', 'paginacao_1': '16', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'}, 
+        {'nome_caderno_2': '02 cad', 'paginacao_2': '8', 'exs_giro_2': '2', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
         ]
     
     lista_valores = valores_por_caderno(lista)
-    valores_caderno = salvar_caderno(lista_valores, 460810, 'Lombada Quadrada')
+    valores_caderno = salvar_caderno(lista_valores, 23000, 'Lombada Quadrada')
 
     # print(valores_caderno)
 
