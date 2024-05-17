@@ -8,16 +8,13 @@ def desperdicio_discovery(tiragem):
     
 
 def desperdicio_refile(tiragem, calc_cliente):
-    if calc_cliente == False:
-        if tiragem < 25000:
-            return (300/tiragem) * 100
-        else:
-            return 0.5
+    if calc_cliente:
+        return 2.0 + ((300/tiragem) * 100)
+    elif tiragem < 25000:
+        return (300/tiragem) * 100
     else:
-        if tiragem < 25000:
-            return (300/tiragem) * 100
-        else:
-            return 2.0
+        return 0.5
+
 
 def desperdicio_tipo_acabamento(tipo, tiragem):
     if tiragem < 25000:
@@ -58,7 +55,7 @@ def desperdicio_imp_interno(disc_imp, refile_imp, desintercalacao, paginacao, ti
         desp_discovery = desperdicio_discovery(tiragem)
     
     if refile_imp == '1':
-        desp_refile = desperdicio_refile(tiragem, False)
+        desp_refile = desperdicio_refile(tiragem, calc_cliente=False)
 
     if desintercalacao == '1':
         desp_desintercalacao = 0.2
@@ -87,11 +84,17 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, 
     desp_disc_man = 0.0
 
     if refile == '1':
-        desp_refile = desperdicio_refile(tiragem, calc_cliente)
+        if calc_cliente:
+            desp_refile = desperdicio_refile(tiragem, calc_cliente=True)
+        else:
+            desp_refile = desperdicio_refile(tiragem, calc_cliente)
     if discovery == '1':
         desp_discovery = desperdicio_discovery(tiragem)
     if disc_man == '1':
-        desp_disc_man = desperdicio_discovery(tiragem)
+        if calc_cliente == True:
+            desp_disc_man = 2.0
+        else:
+            desp_disc_man = desperdicio_discovery(tiragem)
 
     total = desp_acbto + desp_refile + desp_discovery + desp_disc_man
 
@@ -99,7 +102,7 @@ def desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, 
 
 def desperdicio_acbto_cliente(tiragem, tipo_acbto, refile, discovery, disc_man):
     if tiragem < 25000:
-        return desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, calc_cliente=True)
+        return desperdicio_acbto_interno(tiragem, tipo_acbto, refile, discovery, disc_man, calc_cliente=True) + 2.0
     elif disc_man == "1":
         return 6.0
     else:
@@ -144,7 +147,8 @@ def salvar_caderno(lista_de_valores, tiragem, tipo_acabamento):
                 f'Acabamento: {desp_acabamento_int}\n'
                 f'Acerto_cli: {desp_acerto_cli}\n'
                 f'Impressão_cli: {desp_impressao_cli}\n'
-                f'Acabamento_cli: {desp_acabamento_cli}')
+                f'Acabamento_cli: {desp_acabamento_cli}\n'
+                f"{'-'*20}")
             
             
     except Exception as e:
@@ -158,8 +162,8 @@ if __name__ == "__main__":
 
     
     lista = [
-        {'nome_caderno_1': '01 cad', 'paginacao_1': '16', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'}, 
-        {'nome_caderno_2': '02 cad', 'paginacao_2': '8', 'exs_giro_2': '2', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
+        {'nome_caderno_1': '01 cad', 'paginacao_1': '32', 'exs_giro_1': '1', 'papel_1': '2', 'disc_imp_1': '1', 'refile_imp_1': '1', 'desintercalacao_1': '1', 'refile_acab_1': '0', 'disc_acab_1': '0', 'disc_man_1': '0'},
+        {'nome_caderno_2': '02 cad', 'paginacao_2': '32', 'exs_giro_2': '1', 'papel_2': '3', 'disc_imp_2': '0', 'refile_imp_2': '0', 'desintercalacao_2': '0', 'refile_acab_2': '1', 'disc_acab_2': '1', 'disc_man_2': '1'}
         ]
     
     lista_valores = valores_por_caderno(lista)
